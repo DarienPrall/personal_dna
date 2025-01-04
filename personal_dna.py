@@ -148,12 +148,13 @@ allele_2_frequencies = {
 
 
 # Step 1.5: Print Results
-print(f"Allele_1 Counts: {allele_1_counts}")
-print(f"Allele_1 Frequencies: {allele_1_frequencies}")
-print(f"Allele_2 Counts: {allele_2_counts}")
-print(f"Allele_2 Frequencies: {allele_2_frequencies}")
+#print(f"Allele_1 Counts: {allele_1_counts}")
+#print(f"Allele_1 Frequencies: {allele_1_frequencies}")
+#print(f"Allele_2 Counts: {allele_2_counts}")
+#print(f"Allele_2 Frequencies: {allele_2_frequencies}")
 
 # Step 1.6: Vizualize Results
+allele_1_chart_file_path = ('/Users/darienprall/Documents/GitHub/outputs')
 allele_1_key = list(allele_1_counts.keys())
 allele_1_values = list(allele_1_counts.values())
 plt.bar(allele_1_key, allele_1_values)
@@ -161,8 +162,11 @@ plt.grid(True, which = 'both', axis = 'y', linestyle = '--', alpha = 0.7)
 plt.title('Allele 1 Counts')
 plt.xlabel('Allele')
 plt.ylabel('Count')
-plt.show()
+#plt.savefig(os.path.join(allele_1_chart_file_path, 'allele_1_counts.png'))
+#plt.show()
 
+
+allele_2_chart_file_path = ('/Users/darienprall/Documents/GitHub/outputs')
 allele_2_key = list(allele_2_counts.keys())
 allele_2_values = list(allele_2_counts.values())
 plt.bar(allele_2_key, allele_2_values)
@@ -170,4 +174,42 @@ plt.grid(True, which ='major', axis = 'y',linestyle = '--', alpha = 0.7)
 plt.title('Allele 2 Counts')
 plt.xlabel("Allele")
 plt.ylabel('Count')
-plt.show()
+#plt.savefig(os.path.join(allele_1_chart_file_path, 'allele_2_counts.png'))
+#plt.show()
+
+#----------------------------------------------------------------------
+# TASK 2: GROUP RSIDs BY CHROMOSOME
+#----------------------------------------------------------------------
+
+# Step 2.1: Extract the Chromosome and RSID Columns
+chromosomes = data['chromosome'].to_numpy()
+rsids = data['rsid'].to_numpy()
+# Step 2.2: Use dictionary to group SNPs by Chromosome
+
+chromosome_rsid_dictionary = {}
+
+for rsid, chrom in zip(rsids, chromosomes):
+    if chrom not in chromosome_rsid_dictionary:
+        chromosome_rsid_dictionary[chrom] = []
+    chromosome_rsid_dictionary[chrom].append(rsid)
+
+# Step 2.3: Display results in a table and save to a new file
+
+chromosomes_rsid_data = []
+
+for chrom, rsids in chromosome_rsid_dictionary.items():
+    for rsid in rsids:
+        chromosomes_rsid_data.append([chrom, rsid])
+
+dataframe = pd.DataFrame(chromosomes_rsid_data, columns=['Chromosome', 'RSID'])
+chromosome_rsid_folder_path = ('/Users/darienprall/Documents/GitHub/outputs')
+chromosome_rsid_filename = ('chromosome_rsid_data.csv')
+chromosome_rsid_file_path = os.path.join(chromosome_rsid_folder_path, chromosome_rsid_filename)
+#dataframe.to_csv(chromosome_rsid_file_path, index = False)
+#print(f"File saved to: {chromosome_rsid_file_path}")
+
+#for i in chromosome_rsid_dictionary:
+#    print(f"Chromosome {i}: {chromosome_rsid_dictionary[i][:10]}")
+
+#for i in chromosome_rsid_dictionary:
+#    print(f"Chromosome {i} has {len(chromosome_rsid_dictionary[i])} RSIDs")
