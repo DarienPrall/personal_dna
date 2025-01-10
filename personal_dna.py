@@ -213,3 +213,48 @@ chromosome_rsid_file_path = os.path.join(chromosome_rsid_folder_path, chromosome
 
 #for i in chromosome_rsid_dictionary:
 #    print(f"Chromosome {i} has {len(chromosome_rsid_dictionary[i])} RSIDs")
+
+
+#----------------------------------------------------------------------
+# TASK 3: FILTER RSIDs BY CHROMOSE AND POSITION RANGE
+#----------------------------------------------------------------------
+
+# Step 3.1: Prompt User for a Chromosome and Position
+
+TOTAL_POSITIONS = 249208772
+MAX_CHROMOSOME_COUNT = 23
+
+def get_chromosome():
+    while True:
+        lookup_chromosome = input(f"Enter a position number (1 to {MAX_CHROMOSOME_COUNT}): ")
+        if lookup_chromosome.isdigit():
+            lookup_chromosome = int(lookup_chromosome)
+            if lookup_chromosome >= 1 and lookup_chromosome <= MAX_CHROMOSOME_COUNT:
+                return lookup_chromosome
+            else:
+                print(f"Please enter a chromosome number between 1 and {MAX_CHROMOSOME_COUNT}")
+        else: 
+            print(f"Invalid Input. Please enter a number.")
+
+def get_position():
+    while True:
+        lookup_position = input(f"Enter a position (1 to {TOTAL_POSITIONS}): ")
+        if lookup_position.isdigit():
+            lookup_position = int(lookup_position)
+            if lookup_position >= 1 and lookup_position <= TOTAL_POSITIONS:
+                return lookup_position
+            else:
+                print(f"Invalid Entry. Please enter a number between 1 and {TOTAL_POSITIONS}")
+        else:
+            print(f"Invalid Input. Please enter a number.")
+
+def collect_user_inputs():
+    chromosome = get_chromosome()
+    position = get_position()
+    return chromosome, position
+
+chromosome, position = collect_user_inputs()
+
+#print(f"You chose {chromosome} for chromosome and {position} for position")
+
+
