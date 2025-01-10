@@ -213,3 +213,80 @@ chromosome_rsid_file_path = os.path.join(chromosome_rsid_folder_path, chromosome
 
 #for i in chromosome_rsid_dictionary:
 #    print(f"Chromosome {i} has {len(chromosome_rsid_dictionary[i])} RSIDs")
+
+
+#----------------------------------------------------------------------
+# TASK 3: FILTER RSIDs BY CHROMOSE AND POSITION RANGE
+#----------------------------------------------------------------------
+
+# Step 3.1: Prompt User for a Chromosome and Position
+
+# Step 3.1.1: Create a dictionary of Chromosomes and their position ranges dynamically based on the dataset
+grouped_data = data.groupby('chromosome')['position']
+
+chromosome_position_ranges = {}
+
+for chromosome, position in grouped_data:
+    min_position = int(position.min())
+    max_position = int(position.max())
+    chromosome_position_ranges[chromosome] = (min_position, max_position)
+
+for chromosome, ranges in chromosome_position_ranges.items():
+        min_range, max_range = ranges
+        #print(f"Chromosome: {chromosome}\n Minimum Position: {min_range}\n Max Position: {max_range}")
+
+
+def lookup_by_chromosome(chromosome):
+    if chromosome in data['chromosome'].values:
+        results = data[data['chromosome'] == chromosome]
+        print(f"RSIDs for Chromosome {chromosome}")
+        print(results[['rsid', 'position']])
+    else:
+        print(f"Chromosome {chromosome} not found in the dataset")
+
+
+def lookup_by_position_range(min_range, max_range):
+    data['position'] = data['position'].astype(int)
+    
+    results = data[(data['position'] >= min_range) & (data['position'] <= max_range)]
+    
+    if not results.empty:
+        print(f"RSIDs between positions {min_range} and {max_range}:")
+        print(results[['rsid', 'chromosome', 'position']])  # Display rsid, chromosome, and position
+    else:
+        print(f"No RSIDs found in the position range {min_range}-{max_range}.")
+
+
+def main_function():
+    while True:
+        print("\nWelcome to the RSID Lookup System!")
+        user_choice = input("Enter [1] to lookup by Chromosome, or [2] to lookup by Position Range (or type 'exit' to quit): ")
+        
+        if user_choice == '1':
+            chromosome = input("Enter the chromosome number (e.g., 1, 2, 3): ")
+            if chromosome.isdigit():  # Make sure the input is a number
+                lookup_by_chromosome(int(chromosome))
+            else:
+                print("Invalid input. Please enter a valid chromosome number.")
+
+        elif user_choice == '2':
+            try:
+                min_position = int(input("Enter the minimum position: "))
+                max_position = int(input("Enter the maximum position: "))
+                
+                if min_position > max_position:
+                    print("The minimum position cannot be greater than the maximum position.")
+                else:
+                    lookup_by_position_range(min_position, max_position)
+            except ValueError:
+                print("Please enter valid numbers for the position range.")
+
+        elif user_choice.lower() == 'exit':
+            print("Goodbye!")
+            break 
+
+        else:
+            print("Invalid choice. Please enter 1 or 2 to look up RSIDs, or 'exit' to quit.")
+
+
+main_function()
